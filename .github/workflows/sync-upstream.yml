@@ -2,9 +2,9 @@
 name: Sync and merge Upstream
 "on":
   schedule:
-    - cron: 45 * * * *
+    - cron: 45 22 * * *
 jobs:
-  lock:
+  sync:
     runs-on: ubuntu-latest
     steps:
       - name: Sync and merge upstream repository with your current repository
