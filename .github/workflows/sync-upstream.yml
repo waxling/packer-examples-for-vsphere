@@ -2,7 +2,7 @@
 name: Sync and merge Upstream
 "on":
   schedule:
-    - cron: 30 00 * * *
+    - cron: 42 * * * *
 jobs:
   lock:
     runs-on: ubuntu-latest
