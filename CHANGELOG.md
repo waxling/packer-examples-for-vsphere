@@ -1,26 +1,44 @@
 # Release History
 
-## .Next
+## v23.10
 
-> Release Date: Unreleased
+> Release Date: 2023-10-23
 
 :boom: **Enhancement**:
 
 - Adds VMware Photon OS 5.0 to the project. [GH-582](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/582)
 - Adds Debian 12 to the project. [GH-584](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/584)
+- Adds Oracle Linux 9 to the project. [GH-670](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/670)
+- Adds Oracle Linux 8 to the project. [GH-670](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/670)
+- Adds Windows 11 Enterprise to the project. [GH-688](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/688)
+- Adds Windows 10 Enterprise to the project. [GH-688](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/688)
+- Adds the option to configure the following target for builds: [GH-471](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/471)
+  - a vSphere cluster with Distributed Resource Scheduling enabled. (Default)
+  - an ESXi host in vSphere cluster with Distributed Resource Scheduling disabled. (Override)
+  - an ESXi host not in a vSphere cluster. (Override)
+- Adds a development container for Visual Studio Code. [GH-700](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/700)
+- Adds an example `.gitlab.yml` file for GitLab CI/CD. [GH-675](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/675)
+- Adds a `build-ci.tmpl` that can be used to create or update the `.gitlab-ci.yml` file using gomplate. [GH-675](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/675)
+- Adds Packer logging settings to `set-envvars.sh`. [GH-705](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/705)
+- Adds a debug option (`--debug` or `-d`) to`./build.sh` to enable debug logging for Packer. [GH-706](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/706)
+
+:bug: **Bugfix**:
+
+- Updates Debian 11 to include `build_password` in the `linux-debian.pkr.hcl` configuration file. [GH-653](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/653)
+- Updates Debian 11 to ensure `/dev/sr1` is not mounted with use of the default `http` data source. No changes to the `disk` data source. [GH-686](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/686)
 
 :sweat_drops: **Chore**:
 
-- Updates `required_versions` for `packer` to `>= 1.9.1`. [GH-563](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/563)
-- Updates `required_plugins` for `packer-plugin-vsphere` to `>= 1.2.0`. [GH-564](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/564)
-- Updates `required_plugins` for `ethanmdavidson/packer-plugin-git` to `>= 0.4.2`. [GH-562](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/562)
+- Updates `required_versions` for `packer` to `>= 1.9.4`. [GH-718](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/718)
+- Updates `required_plugins` for `packer-plugin-vsphere` to `>= 1.2.1`. [GH-564](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/564)
+- Updates `required_plugins` for `ethanmdavidson/packer-plugin-git` to `>= 0.4.3`. [GH-717](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/717)
 - Updates `required_plugins` for `rgl/packer-plugin-windows-update` to `>= 0.14.3`. [GH-565](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/565)
-- Updates `required_versions` for `terraform` to `>= 1.5.0`. [GH-560](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/560)
-- Updates `required_versions` for `hashicorp/vsphere` to `>= 2.4.0`. [GH-561](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/561)
+- Updates `required_versions` for `terraform` to `>= 1.6.0`. [GH-757](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/757)
+- Updates `required_versions` for `hashicorp/vsphere` to `>= 2.5.1`. [GH-758](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/758)
 - Updates Gomplate to `3.11.5`. [GH-559](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/559)
 - Updates ansible-core to `2.15`. [GH-573](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/573)
-- Updates Debian 11 to 11.7 release. [GH-574](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/574)
-- Updates Ubuntu 22.04 to 22.04.2 release. [GH-492](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/492)
+- Updates Debian 11 to 11.8 release. [GH-738](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/738)
+- Updates Ubuntu 22.04 to 22.04.3 release. [GH-720](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/720)
 - Updates Ubuntu 20.04 to 20.04.6 release. [GH-566](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/566)
 - Removes Ubuntu 18.04 from the project. [GH-578](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/578)
   
@@ -34,15 +52,17 @@
 - Updates Rocky Linux 8 to 8.8 release. [GH-572](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/572)
 - Updates CentOS Stream 9 to latest June 2023 release. [GH-567](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/567)
 - Updates CentOS Stream 8 to latest June 2023 release. [GH-568](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/568)
-- Updates Windows Server 2022 to May 2023 (US English) release. [GH-579](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/579)
-- Updates Windows 11 22H2 to May 2023 (US English) release. [GH-580](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/580), [GH-583](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/583)
-- Updates Windows 10 22H2 to May 2023 (US English) release. [GH-575](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/581)
+- Updates SLES 15 to 15.5 release. [GH-740](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/740)
+- Updates Windows Server 2022 to October 2023 (US English) release. [GH-744](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/744)
+- Updates Windows 11 22H2 to October 2023 (US English) release. [GH-743](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/743)
+- Updates Windows 10 22H2 to October 2023 (US English) release. [GH-742](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/742)
 
 :wrench: **Refactor**:
 
+- Removes the use of `iso_checksum` and `iso_checksum_type` as they are not needed since the ISOs are not being downloaded by the plugin and are expected to be present and already verified by the user after download. [GH-722](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/722)
 - Removes the installation of Chocolatey from the Microsoft Windows guest operating system builds. [GH-586](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/586)
 
-## [v23.01](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v23.01)
+## v23.01
 
 > Release Date: 2023-01-17
 
@@ -95,7 +115,7 @@
 
 - Removes support to use the `iso_url` variable to download the guest operating system `.iso` from a URL introduced in [GH-249](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/249) due to [GH-343](https://github.com/vmware-samples/packer-examples-for-vsphere/issues/343). [GH-435](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/435)
 
-## [v22.09](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v22.09)
+## v22.09
 
 > Release Date: 2022-09-28
 
@@ -119,7 +139,7 @@
 - Updates Windows 10 to 21H2 September 2022 (US English) release. [GH-283](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/283)
 - Updates `required_versions` for `terraform` to `>= 1.3.1`. [GH-292](https://github.com/vmware-samples/packer-examples-for-vsphere/pull/292)
 
-## [v22.08](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v22.08)
+## v22.08
 
 > Release Date: 2022-08-25
 
@@ -146,7 +166,7 @@
 >
 > - HTTP-based deployment only.
 
-## [v22.07](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v22.07)
+## v22.07
 
 > Release Date: 2022-07-26
 
@@ -182,7 +202,7 @@
 > - Supports 15.3 / 15 Service Pack 3.
 > - HTTP-based deployment only. Disk-based deployment planned.
 
-## [v22.06](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v22.06)
+## v22.06
 
 > Release Date: 2022-06-27
 
@@ -197,7 +217,7 @@
 - Updates Windows 11 to June 2022 (US English) release.
 - Updates `vm_guest_os_type` for Windows Server 2022 guest ID to `windows2019srvNext_64Guest`.
 
-## [v22.05](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v22.05)
+## v22.05
 
 > Release Date: 2022-05-31
 
@@ -215,7 +235,7 @@
 - Updates requirements to include VMware Photon OS 4 as a tested operating system.
 - Updates requirements to include Ubuntu 22.04 as a tested operating system.
 
-## [v22.04](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v22.04)
+## v22.04
 
 > Release Date: 2022-04-28
 
@@ -235,7 +255,7 @@
 - Updates the Windows Server 2022 February 2022 (US English) release. (GH-192)
 - Updates the Ubuntu 20.04 LTS to 20.04.4 release. (GH-184)
 
-## [v22.03](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v22.03)
+## v22.03
 
 > Release Date: 2022-03-17
 
@@ -245,7 +265,7 @@
 - Updates `required_versions` for `terraform` to `>= 1.1.7`.
 - Updates `required_versions` for `hashicorp/vsphere` to `>= 2.1.1`.
 
-## [v22.02](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v22.02)
+## v22.02
 
 > Release Date: 2022-02-22
 
@@ -258,7 +278,7 @@
 - Updates `required_versions` for `packer` to `>= 1.7.10`.
 - Updates `required_versions` for `terraform` to `>= 1.1.5`.
 
-## [v22.01](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v22.01)
+## v22.01
 
 > Release Date: 2022-01-21
 
@@ -280,7 +300,7 @@
 - Adds a GitHub Action on pull requests to check code quality using linters.
 - Updates all of project code to address issues found by the linter(s).
 
-## [v21.11](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v22.11)
+## v21.11
 
 > Release Date: 2021-11-09
 
@@ -302,7 +322,7 @@
 - Adds example Terraform plans for deployment testing.
 - Adds an Ansible playbook example to create a custom role in vSphere for Packer.
 
-## [v21.10.01](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v21.10.01)
+## v21.10.01
 
 > Release Date: 2021-10-20
 
@@ -313,9 +333,9 @@
 - Adds option to use`floppy_content` included in `packer-plugin-vsphere` release`v1.0.2`. Ubuntu Server 18.04 LTS will toggle to use `floppy_content` from `http_content` when `common_data_source = "disk"` is enabled.
 - Updates VMware Photon OS 4.0 to Revision 1.
 - Adds Microsoft Windows 11 Professional as experimental until `vsphere-iso` supports vTPM.
-- Adds support for `skip_import` Adds to `packer-plugin-vsphere` in `v1.0.2`. When set to `true` the virtual machine will not be imported into the content library. This is useful for testing / debugging. Defaults to false.
+- Adds support for `skip_import` Adds to `packer-plugin-vsphere` in `v1.0.2`. When set to `true` the virtual machine will not be imported into the content library. This is useful for testing/debugging. Defaults to false.
 
-## [v21.10](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v21.10)
+## v21.10
 
 > Release Date: 2021-10-11
 
@@ -364,7 +384,7 @@
 - Bumped Packer to `>= 1.7.6`.
 - Thanks to the new contributors: @sestegra, @metabsdm, and @gcblack!
 
-## [v21.09.1](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v21.09.1)
+## v21.09.1
 
 > Release Date: 2021-09-16
 
@@ -378,7 +398,7 @@
 - Adds disclaimers and Updates descriptions in script files.
 - Updates README.md.
 
-## [v21.09](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v21.09)
+## v21.09
 
 > Release Date: 2021-09-07
 
@@ -393,7 +413,7 @@
 - Updates CONTRIBUTING.md.
 - Updates README.md.
 
-## [v21.08](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v21.06)
+## v21.08
 
 > Release Date: 2021-08-18
 
@@ -420,7 +440,7 @@
 - Adds MAINTAINERS.md.
 - Updates README.md.
 
-## [v21.07](https://github.com/vmware-samples/packer-examples-for-vsphere/releases/tag/v21.07)
+## v21.07
 
 > Release Date: 2021-07-21
 
@@ -432,7 +452,7 @@
 - Adds the Packer block to all builds with `required_versions >= "1.7.3"` for Packer.
 - Adds the Packer block for Windows builds with `required_plugins` and `version = "0.12.0"` for the [Windows-Update plugin](https://github.com/rgl/packer-plugin-windows-update).
 
-## Release v20.11
+## v20.11
 
 > Release Date: 2020-11-26
 

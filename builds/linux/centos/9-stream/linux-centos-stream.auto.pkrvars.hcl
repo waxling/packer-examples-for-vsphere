@@ -1,3 +1,6 @@
+# Copyright 2023 VMware, Inc. All rights reserved
+# SPDX-License-Identifier: BSD-2
+
 /*
     DESCRIPTION:
     CentOS Stream 9 variables used by the Packer Plugin for VMware vSphere (vsphere-iso).
@@ -28,10 +31,8 @@ vm_disk_thin_provisioned = true
 vm_network_card          = "vmxnet3"
 
 // Removable Media Settings
-iso_path           = "iso/linux/centos"
-iso_file           = "CentOS-Stream-9-latest-x86_64-dvd1.iso"
-iso_checksum_type  = "sha256"
-iso_checksum_value = "a8b4ae4aa0edcd911aa35205f27a4592d361f771d8e68cad34664b15612fb396"
+iso_path = "iso/linux/centos"
+iso_file = "CentOS-Stream-9-latest-x86_64-dvd1.iso"
 
 // Boot Settings
 vm_boot_order = "disk,cdrom"

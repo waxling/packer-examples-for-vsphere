@@ -1,3 +1,6 @@
+# Copyright 2023 VMware, Inc. All rights reserved
+# SPDX-License-Identifier: BSD-2
+
 /*
     DESCRIPTION:
     CentOS Stream 8 template using the Packer Builder for VMware vSphere (vsphere-iso).
@@ -7,15 +10,19 @@
 //  The Packer configuration.
 
 packer {
-  required_version = ">= 1.9.1"
+  required_version = ">= 1.9.4"
   required_plugins {
-    git = {
-      version = ">= 0.4.2"
-      source  = "github.com/ethanmdavidson/git"
-    }
     vsphere = {
-      version = ">= v1.2.0"
       source  = "github.com/hashicorp/vsphere"
+      version = ">= 1.2.1"
+    }
+    ansible = {
+      source  = "github.com/hashicorp/ansible"
+      version = ">= 1.1.0"
+    }
+    git = {
+      source  = "github.com/ethanmdavidson/git"
+      version = ">= 0.4.3"
     }
   }
 }
@@ -34,7 +41,6 @@ locals {
   build_version     = data.git-repository.cwd.head
   build_description = "Version: ${local.build_version}\nBuilt on: ${local.build_date}\n${local.build_by}"
   iso_paths         = ["[${var.common_iso_datastore}] ${var.iso_path}/${var.iso_file}"]
-  iso_checksum      = "${var.iso_checksum_type}:${var.iso_checksum_value}"
   manifest_date     = formatdate("YYYY-MM-DD hh:mm:ss", timestamp())
   manifest_path     = "${path.cwd}/manifests/"
   manifest_output   = "${local.manifest_path}${local.manifest_date}.json"
@@ -69,6 +75,7 @@ source "vsphere-iso" "linux-centos-stream" {
   // vSphere Settings
   datacenter = var.vsphere_datacenter
   cluster    = var.vsphere_cluster
+  host       = var.vsphere_host
   datastore  = var.vsphere_datastore
   folder     = var.vsphere_folder
 
@@ -98,7 +105,6 @@ source "vsphere-iso" "linux-centos-stream" {
 
   // Removable Media Settings
   iso_paths    = local.iso_paths
-  iso_checksum = local.iso_checksum
   http_content = var.common_data_source == "http" ? local.data_source_content : null
   cd_content   = var.common_data_source == "disk" ? local.data_source_content : null
 
@@ -199,6 +205,7 @@ build {
       vm_mem_size              = var.vm_mem_size
       vm_network_card          = var.vm_network_card
       vsphere_cluster          = var.vsphere_cluster
+      vsphere_host             = var.vsphere_host
       vsphere_datacenter       = var.vsphere_datacenter
       vsphere_datastore        = var.vsphere_datastore
       vsphere_endpoint         = var.vsphere_endpoint

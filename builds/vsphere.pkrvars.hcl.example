@@ -1,3 +1,6 @@
+# Copyright 2023 VMware, Inc. All rights reserved
+# SPDX-License-Identifier: BSD-2
+
 /*
     DESCRIPTION:
     VMware vSphere variables used for all builds.
@@ -13,6 +16,7 @@ vsphere_insecure_connection = false
 // vSphere Settings
 vsphere_datacenter = "sfo-w01-dc01"
 vsphere_cluster    = "sfo-w01-cl01"
+//vsphere_host       = "sfo-w01-esx01"
 vsphere_datastore  = "sfo-w01-cl01-ds-vsan01"
 vsphere_network    = "sfo-w01-seg-dhcp"
 vsphere_folder     = "sfo-w01-fd-templates"

@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# Copyright 2023 VMware, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-2
 
 set -e
 
@@ -16,16 +13,65 @@ follow_link() {
   echo "$FILE"
 }
 
+if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
+  echo "Usage: script.sh [OPTIONS] [CONFIG_PATH]"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help    Show this help message and exit."
+  echo "  -d, --debug   Run builds in debug mode."
+  echo ""
+  echo "Arguments:"
+  echo "  CONFIG_PATH   Path to the configuration directory."
+  echo ""
+  echo "Examples:"
+  echo "  ./build.sh"
+  echo "  ./build.sh --help"
+  echo "  ./build.sh --debug"
+  echo "  ./build.sh config"
+  echo "  ./build.sh us-west-1"
+  echo "  ./build.sh --debug config"
+  echo "  ./build.sh --debug us-west-1"
+  exit 0
+fi
+
+if [ "$1" == "--debug" ] || [ "$1" == "-d" ]; then
+  debug_mode=true
+  debug_option="-debug"
+  shift
+else
+  debug_mode=false
+  debug_option=""
+fi
+
 SCRIPT_PATH=$(realpath "$(dirname "$(follow_link "$0")")")
-CONFIG_PATH=$(realpath "${1:-${SCRIPT_PATH}/config}")
+
+if [ -n "$1" ]; then
+  CONFIG_PATH=$(realpath "$1")
+else
+  CONFIG_PATH=$(realpath "${SCRIPT_PATH}/config")
+fi
+
+menu_banner=$(cat << "EOF"
+    ____             __                ____        _ __    __     
+   / __ \____ ______/ /_____  _____   / __ )__  __(_) /___/ /____ 
+  / /_/ / __  / ___/ //_/ _ \/ ___/  / __  / / / / / / __  / ___/ 
+ / ____/ /_/ / /__/ ,< /  __/ /     / /_/ / /_/ / / / /_/ (__  )  
+/_/    \__,_/\___/_/|_|\___/_/     /_____/\__,_/_/_/\__,_/____/   
+EOF
+)
+
+menu_message="Select a HashiCorp Packer build for VMware vSphere."
+
+if [ "$debug_mode" = true ]; then
+  menu_message+=" \e[31m(Debug Mode)\e[0m"
+fi
 
 menu_option_1() {
   INPUT_PATH="$SCRIPT_PATH"/builds/linux/photon/5/
   echo -e "\nCONFIRM: Build a VMware Photon OS 5 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -38,7 +84,8 @@ menu_option_1() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -46,8 +93,8 @@ menu_option_1() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_2() {
@@ -55,8 +102,7 @@ menu_option_2() {
   echo -e "\nCONFIRM: Build a VMware Photon OS 4 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -69,7 +115,8 @@ menu_option_2() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -77,8 +124,8 @@ menu_option_2() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_3() {
@@ -86,8 +133,7 @@ menu_option_3() {
   echo -e "\nCONFIRM: Build a Debian 12 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -100,7 +146,8 @@ menu_option_3() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -108,8 +155,8 @@ menu_option_3() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_4() {
@@ -117,8 +164,7 @@ menu_option_4() {
   echo -e "\nCONFIRM: Build a Debian 11 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -131,7 +177,8 @@ menu_option_4() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -139,8 +186,8 @@ menu_option_4() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_5() {
@@ -148,8 +195,7 @@ menu_option_5() {
   echo -e "\nCONFIRM: Build a Ubuntu Server 22.04 LTS (cloud-init) Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -162,7 +208,8 @@ menu_option_5() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -170,8 +217,8 @@ menu_option_5() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_6() {
@@ -179,8 +226,7 @@ menu_option_6() {
   echo -e "\nCONFIRM: Build a Ubuntu Server 20.04 LTS (cloud-init) Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -193,7 +239,8 @@ menu_option_6() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -201,8 +248,8 @@ menu_option_6() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_7() {
@@ -210,8 +257,7 @@ menu_option_7() {
   echo -e "\nCONFIRM: Build a Red Hat Enterprise Linux 9 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -224,7 +270,8 @@ menu_option_7() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -233,8 +280,8 @@ menu_option_7() {
       -var-file="$CONFIG_PATH/rhsm.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_8() {
@@ -242,8 +289,7 @@ menu_option_8() {
   echo -e "\nCONFIRM: Build a Red Hat Enterprise Linux 8 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -256,7 +302,8 @@ menu_option_8() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -265,8 +312,8 @@ menu_option_8() {
       -var-file="$CONFIG_PATH/rhsm.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_9() {
@@ -274,8 +321,7 @@ menu_option_9() {
   echo -e "\nCONFIRM: Build a Red Hat Enterprise Linux 7 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -288,7 +334,8 @@ menu_option_9() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -297,8 +344,8 @@ menu_option_9() {
       -var-file="$CONFIG_PATH/rhsm.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_10() {
@@ -306,8 +353,7 @@ menu_option_10() {
   echo -e "\nCONFIRM: Build a AlmaLinux OS 9 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -320,7 +366,8 @@ menu_option_10() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -328,8 +375,8 @@ menu_option_10() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_11() {
@@ -337,8 +384,7 @@ menu_option_11() {
   echo -e "\nCONFIRM: Build a AlmaLinux OS 8 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -351,7 +397,8 @@ menu_option_11() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -359,8 +406,8 @@ menu_option_11() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_12() {
@@ -368,8 +415,7 @@ menu_option_12() {
   echo -e "\nCONFIRM: Build a Rocky Linux 9 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -382,7 +428,8 @@ menu_option_12() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -390,8 +437,8 @@ menu_option_12() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_13() {
@@ -399,8 +446,7 @@ menu_option_13() {
   echo -e "\nCONFIRM: Build a Rocky Linux 8 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -413,7 +459,8 @@ menu_option_13() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -421,17 +468,78 @@ menu_option_13() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 menu_option_14() {
+  INPUT_PATH="$SCRIPT_PATH"/builds/linux/oracle/9/
+  echo -e "\nCONFIRM: Build a Oracle Linux 9 Template for VMware vSphere?"
+  echo -e "\nContinue? (y/n)"
+  read -r REPLY
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+  fi
+
+  ### Build a Oracle Linux 9 Template for VMware vSphere. ###
+  echo "Building a Oracle Linux 9 Template for VMware vSphere..."
+
+  ### Initialize HashiCorp Packer and required plugins. ###
+  echo "Initializing HashiCorp Packer and required plugins..."
+  packer init "$INPUT_PATH"
+
+  ### Start the Build. ###
+  echo "Starting the build...."
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
+      -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/proxy.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
+      "$INPUT_PATH"
+
+  ### Build Complete. ###
+  echo "Build Complete."
+}
+
+menu_option_15() {
+  INPUT_PATH="$SCRIPT_PATH"/builds/linux/oracle/8/
+  echo -e "\nCONFIRM: Build a Oracle Linux 8 Template for VMware vSphere?"
+  echo -e "\nContinue? (y/n)"
+  read -r REPLY
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+  fi
+
+  ### Build a Oracle Linux 8 Template for VMware vSphere. ###
+  echo "Building a Oracle Linux 8 Template for VMware vSphere..."
+
+  ### Initialize HashiCorp Packer and required plugins. ###
+  echo "Initializing HashiCorp Packer and required plugins..."
+  packer init "$INPUT_PATH"
+
+  ### Start the Build. ###
+  echo "Starting the build...."
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
+      -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/proxy.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
+      "$INPUT_PATH"
+
+  ### Build Complete. ###
+  echo "Build Complete."
+}
+
+menu_option_16() {
   INPUT_PATH="$SCRIPT_PATH"/builds/linux/centos/9-stream/
   echo -e "\nCONFIRM: Build a CentOS Stream 9 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -444,7 +552,8 @@ menu_option_14() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -452,17 +561,16 @@ menu_option_14() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
-menu_option_15() {
+menu_option_17() {
   INPUT_PATH="$SCRIPT_PATH"/builds/linux/centos/8-stream/
   echo -e "\nCONFIRM: Build a CentOS Stream 8 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -475,7 +583,8 @@ menu_option_15() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -483,17 +592,16 @@ menu_option_15() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
-menu_option_16() {
+menu_option_18() {
   INPUT_PATH="$SCRIPT_PATH"/builds/linux/centos/7/
   echo -e "\nCONFIRM: Build a CentOS Linux 7 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -506,7 +614,8 @@ menu_option_16() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -514,17 +623,16 @@ menu_option_16() {
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
-menu_option_17() {
+menu_option_19() {
   INPUT_PATH="$SCRIPT_PATH"/builds/linux/sles/15/
   echo -e "\nCONFIRM: Build a SUSE Linux Enterprise Server 15 Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -537,7 +645,8 @@ menu_option_17() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/ansible.pkrvars.hcl" \
@@ -546,18 +655,17 @@ menu_option_17() {
       -var-file="$CONFIG_PATH/scc.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 
-menu_option_18() {
+menu_option_20() {
   INPUT_PATH="$SCRIPT_PATH"/builds/windows/server/2022/
   echo -e "\nCONFIRM: Build all Windows Server 2022 Templates for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -570,23 +678,23 @@ menu_option_18() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
-menu_option_19() {
+menu_option_21() {
   INPUT_PATH="$SCRIPT_PATH"/builds/windows/server/2022/
   echo -e "\nCONFIRM: Build Microsoft Windows Server 2022 Standard Templates for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -599,24 +707,24 @@ menu_option_19() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       --only vsphere-iso.windows-server-standard-dexp,vsphere-iso.windows-server-standard-core \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
-menu_option_20() {
+menu_option_22() {
   INPUT_PATH="$SCRIPT_PATH"/builds/windows/server/2022/
   echo -e "\nCONFIRM: Build Microsoft Windows Server 2022 Datacenter Templates for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -629,24 +737,24 @@ menu_option_20() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       --only vsphere-iso.windows-server-datacenter-dexp,vsphere-iso.windows-server-datacenter-core \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
-menu_option_21() {
+menu_option_23() {
   INPUT_PATH="$SCRIPT_PATH"/builds/windows/server/2019/
   echo -e "\nCONFIRM: Build all Windows Server 2019 Templates for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -659,23 +767,23 @@ menu_option_21() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
-menu_option_22() {
+menu_option_24() {
   INPUT_PATH="$SCRIPT_PATH"/builds/windows/server/2019/
   echo -e "\nCONFIRM: Build Microsoft Windows Server 2019 Standard Templates for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -688,24 +796,24 @@ menu_option_22() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       --only vsphere-iso.windows-server-standard-dexp,vsphere-iso.windows-server-standard-core \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
-menu_option_23() {
+menu_option_25() {
   INPUT_PATH="$SCRIPT_PATH"/builds/windows/server/2019/
   echo -e "\nCONFIRM: Build Microsoft Windows Server 2019 Datacenter Templates for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
@@ -718,29 +826,29 @@ menu_option_23() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       --only vsphere-iso.windows-server-datacenter-dexp,vsphere-iso.windows-server-datacenter-core \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
-menu_option_24() {
+menu_option_26() {
   INPUT_PATH="$SCRIPT_PATH"/builds/windows/desktop/11/
-  echo -e "\nCONFIRM: Build a Windows 11 Template for VMware vSphere?"
+  echo -e "\nCONFIRM: Build all Windows 11 Templates for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
-  ### Build a Windows 11 Template for VMware vSphere. ###
-  echo "Building a Windows 11 Template for VMware vSphere..."
+  ### Build all Windows 11 Templates for VMware vSphere. ###
+  echo "Building all Windows 11 Templates for VMware vSphere..."
 
   ### Initialize HashiCorp Packer and required plugins. ###
   echo "Initializing HashiCorp Packer and required plugins..."
@@ -748,28 +856,28 @@ menu_option_24() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
-menu_option_25() {
-  INPUT_PATH="$SCRIPT_PATH"/builds/windows/desktop/10/
-  echo -e "\nCONFIRM: Build a Windows 10 Template for VMware vSphere?"
+menu_option_27() {
+  INPUT_PATH="$SCRIPT_PATH"/builds/windows/desktop/11/
+  echo -e "\nCONFIRM: Build a Windows 11 - Enterprise Only Template for VMware vSphere?"
   echo -e "\nContinue? (y/n)"
   read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
   fi
 
-  ### Build a Windows 10 Template for VMware vSphere. ###
-  echo "Building a Windows 10 Template for VMware vSphere..."
+  ### Build a Windows 11 - Enterprise Only Template for VMware vSphere. ###
+  echo "Building a Windows 11 - Enterprise Only Template for VMware vSphere..."
 
   ### Initialize HashiCorp Packer and required plugins. ###
   echo "Initializing HashiCorp Packer and required plugins..."
@@ -777,14 +885,135 @@ menu_option_25() {
 
   ### Start the Build. ###
   echo "Starting the build...."
-  packer build -force \
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
+      --only vsphere-iso.windows-desktop-ent \
       -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
       -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
       "$INPUT_PATH"
 
-  ### All done. ###
-  echo "Done."
+  ### Build Complete. ###
+  echo "Build Complete."
+}
+
+menu_option_28() {
+  INPUT_PATH="$SCRIPT_PATH"/builds/windows/desktop/11/
+  echo -e "\nCONFIRM: Build a Windows 11 - Professional Only Template for VMware vSphere?"
+  echo -e "\nContinue? (y/n)"
+  read -r REPLY
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+  fi
+
+  ### Build a Windows 11 - Professional Only Template for VMware vSphere. ###
+  echo "Building a Windows 11 - Professional Only Template for VMware vSphere..."
+
+  ### Initialize HashiCorp Packer and required plugins. ###
+  echo "Initializing HashiCorp Packer and required plugins..."
+  packer init "$INPUT_PATH"
+
+  ### Start the Build. ###
+  echo "Starting the build...."
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
+      --only vsphere-iso.windows-desktop-pro \
+      -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
+      "$INPUT_PATH"
+
+  ### Build Complete. ###
+  echo "Build Complete."
+}
+
+menu_option_29() {
+  INPUT_PATH="$SCRIPT_PATH"/builds/windows/desktop/10/
+  echo -e "\nCONFIRM: Build all Windows 10 Templates for VMware vSphere?"
+  echo -e "\nContinue? (y/n)"
+  read -r REPLY
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+  fi
+
+  ### Build all Windows 10 Templates for VMware vSphere. ###
+  echo "Building all Windows 10 Templates for VMware vSphere..."
+
+  ### Initialize HashiCorp Packer and required plugins. ###
+  echo "Initializing HashiCorp Packer and required plugins..."
+  packer init "$INPUT_PATH"
+
+  ### Start the Build. ###
+  echo "Starting the build...."
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
+      -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
+      "$INPUT_PATH"
+
+  ### Build Complete. ###
+  echo "Build Complete."
+}
+
+menu_option_30() {
+  INPUT_PATH="$SCRIPT_PATH"/builds/windows/desktop/10/
+  echo -e "\nCONFIRM: Build a Windows 10 - Enterprise Only Template for VMware vSphere?"
+  echo -e "\nContinue? (y/n)"
+  read -r REPLY
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+  fi
+
+  ### Build a Windows 10 - Enterprise Only Template for VMware vSphere. ###
+  echo "Building a Windows 10 - Enterprise Only Template for VMware vSphere..."
+
+  ### Initialize HashiCorp Packer and required plugins. ###
+  echo "Initializing HashiCorp Packer and required plugins..."
+  packer init "$INPUT_PATH"
+
+  ### Start the Build. ###
+  echo "Starting the build...."
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
+      --only vsphere-iso.windows-desktop-ent \
+      -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
+      "$INPUT_PATH"
+
+  ### Build Complete. ###
+  echo "Build Complete."
+}
+
+menu_option_31() {
+  INPUT_PATH="$SCRIPT_PATH"/builds/windows/desktop/10/
+  echo -e "\nCONFIRM: Build a Windows 10 - Professional Only Template for VMware vSphere?"
+  echo -e "\nContinue? (y/n)"
+  read -r REPLY
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+  fi
+
+  ### Build a Windows 10 - Professional Only Template for VMware vSphere. ###
+  echo "Building a Windows 10 - Professional Only Template for VMware vSphere..."
+
+  ### Initialize HashiCorp Packer and required plugins. ###
+  echo "Initializing HashiCorp Packer and required plugins..."
+  packer init "$INPUT_PATH"
+
+  ### Start the Build. ###
+  echo "Starting the build...."
+  echo "packer build -force -on-error=ask $debug_option"
+  packer build -force -on-error=ask $debug_option \
+      --only vsphere-iso.windows-desktop-pro \
+      -var-file="$CONFIG_PATH/vsphere.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/build.pkrvars.hcl" \
+      -var-file="$CONFIG_PATH/common.pkrvars.hcl" \
+      "$INPUT_PATH"
+
+  ### Build Complete. ###
+  echo "Build Complete."
 }
 
 press_enter() {
@@ -795,28 +1024,23 @@ press_enter() {
 }
 
 info() {
+  echo "Copyright 2023 VMware, Inc. All rights reserved."
   echo "License: BSD-2"
   echo ""
-  echo "For more information, review the project README."
   echo "GitHub Repository: github.com/vmware-samples/packer-examples-for-vsphere/"
   read -r
 }
 
 incorrect_selection() {
-  echo "Do or do not. There is no try."
+  echo "Invalid selection, please try again."
 }
 
 until [ "$selection" = "0" ]; do
   clear
   echo ""
-  echo "    ____             __                ____        _ __    __     "
-  echo "   / __ \____ ______/ /_____  _____   / __ )__  __(_) /___/ /____ "
-  echo "  / /_/ / __  / ___/ //_/ _ \/ ___/  / __  / / / / / / __  / ___/ "
-  echo " / ____/ /_/ / /__/ ,< /  __/ /     / /_/ / /_/ / / / /_/ (__  )  "
-  echo "/_/    \__,_/\___/_/|_|\___/_/     /_____/\__,_/_/_/\__,_/____/   "
+  echo -e "$menu_banner"
   echo ""
-  echo -n "  Select a HashiCorp Packer build for VMware vSphere:"
-  echo ""
+  echo -e "$menu_message"
   echo ""
   echo "      Linux Distribution:"
   echo ""
@@ -833,21 +1057,27 @@ until [ "$selection" = "0" ]; do
   echo "    	11  -  AlmaLinux OS 8"
   echo "    	12  -  Rocky Linux 9"
   echo "    	13  -  Rocky Linux 8"
-  echo "    	14  -  CentOS Stream 9"
-  echo "    	15  -  CentOS Stream 8"
-  echo "    	16  -  CentOS Linux 7"
-  echo "    	17  -  SUSE Linux Enterprise Server 15"
+  echo "    	14  -  Oracle Linux 9"
+  echo "    	15  -  Oracle Linux 8"
+  echo "    	16  -  CentOS Stream 9"
+  echo "    	17  -  CentOS Stream 8"
+  echo "    	18  -  CentOS Linux 7"
+  echo "    	19  -  SUSE Linux Enterprise Server 15"
   echo ""
   echo "      Microsoft Windows:"
   echo ""
-  echo "    	18  -  Windows Server 2022 - All"
-  echo "    	19  -  Windows Server 2022 - Standard Only"
-  echo "    	20  -  Windows Server 2022 - Datacenter Only"
-  echo "    	21  -  Windows Server 2019 - All"
-  echo "    	22  -  Windows Server 2019 - Standard Only"
-  echo "    	23  -  Windows Server 2019 - Datacenter Only"
-  echo "    	24  -  Windows 11"
-  echo "    	25  -  Windows 10"
+  echo "    	20  -  Windows Server 2022 - All"
+  echo "    	21  -  Windows Server 2022 - Standard Only"
+  echo "    	22  -  Windows Server 2022 - Datacenter Only"
+  echo "    	23  -  Windows Server 2019 - All"
+  echo "    	24  -  Windows Server 2019 - Standard Only"
+  echo "    	25  -  Windows Server 2019 - Datacenter Only"
+  echo "    	26  -  Windows 11 - All"
+  echo "    	27  -  Windows 11 - Enterprise Only"
+  echo "    	28  -  Windows 11 - Professional Only"
+  echo "    	29  -  Windows 10 - All"
+  echo "    	30  -  Windows 10 - Enterprise Only"
+  echo "    	31  -  Windows 10 - Professional Only"
   echo ""
   echo "      Other:"
   echo ""
@@ -882,8 +1112,14 @@ until [ "$selection" = "0" ]; do
     23 ) clear ; menu_option_23 ; press_enter ;;
     24 ) clear ; menu_option_24 ; press_enter ;;
     25 ) clear ; menu_option_25 ; press_enter ;;
-    I ) clear ; info ; press_enter ;;
-    Q ) clear ; exit ;;
+    26 ) clear ; menu_option_26 ; press_enter ;;
+    27 ) clear ; menu_option_27 ; press_enter ;;
+    28 ) clear ; menu_option_28 ; press_enter ;;
+    29 ) clear ; menu_option_29 ; press_enter ;;
+    30 ) clear ; menu_option_30 ; press_enter ;;
+    31 ) clear ; menu_option_31 ; press_enter ;;
+    i|I ) clear ; info ; press_enter ;;
+    q|Q ) clear ; exit ;;
     * ) clear ; incorrect_selection ; press_enter ;;
   esac
 done

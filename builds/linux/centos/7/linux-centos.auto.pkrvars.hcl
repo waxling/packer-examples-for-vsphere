@@ -1,3 +1,6 @@
+# Copyright 2023 VMware, Inc. All rights reserved
+# SPDX-License-Identifier: BSD-2
+
 /*
     DESCRIPTION:
     CentOS Linux 7 variables used by the Packer Plugin for VMware vSphere (vsphere-iso).
@@ -28,10 +31,8 @@ vm_disk_thin_provisioned = true
 vm_network_card          = "vmxnet3"
 
 // Removable Media Settings
-iso_path           = "iso/linux/centos"
-iso_file           = "CentOS-7-x86_64-DVD-2009.iso"
-iso_checksum_type  = "sha256"
-iso_checksum_value = "e33d7b1ea7a9e2f38c8f693215dd85254c3a4fe446f93f563279715b68d07987"
+iso_path = "iso/linux/centos"
+iso_file = "CentOS-7-x86_64-DVD-2009.iso"
 
 // Boot Settings
 vm_boot_order = "disk,cdrom"

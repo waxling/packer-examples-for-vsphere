@@ -54,6 +54,12 @@ menu:
       - entry: "Rocky Linux 8"
         build:
           path: "builds/linux/rocky/8/"
+      - entry: "Oracle Linux 9"
+        build:
+          path: "builds/linux/oracle/9/"
+      - entry: "Oracle Linux 8"
+        build:
+          path: "builds/linux/oracle/8/"
       - entry: "CentOS Stream 9"
         build:
           path: "builds/linux/centos/9-stream/"
@@ -68,6 +74,7 @@ menu:
           path: "builds/linux/sles/15/"
           var_files:
             - "scc.pkrvars.hcl"
+
   - entry: "Microsoft Windows"
     build:
       var_files:
@@ -111,9 +118,31 @@ menu:
           only:
             - vsphere-iso.windows-server-datacenter-dexp
             - vsphere-iso.windows-server-datacenter-core
-      - entry: "Windows 11"
+      - entry: "Windows 11 - All"
+        message: "all Windows 11 Templates"
         build:
           path: "builds/windows/desktop/11/"
-      - entry: "Windows 10"
+      - entry: "Windows 11 - Enterprise Only"
+        build:
+          path: "builds/windows/desktop/11/"
+          only:
+            - vsphere-iso.windows-desktop-ent
+      - entry: "Windows 11 - Professional Only"
+        build:
+          path: "builds/windows/desktop/11/"
+          only:
+            - vsphere-iso.windows-desktop-pro
+      - entry: "Windows 10 - All"
+        message: "all Windows 10 Templates"
         build:
           path: "builds/windows/desktop/10/"
+      - entry: "Windows 10 - Enterprise Only"
+        build:
+          path: "builds/windows/desktop/10/"
+          only:
+            - vsphere-iso.windows-desktop-ent
+      - entry: "Windows 10 - Professional Only"
+        build:
+          path: "builds/windows/desktop/10/"
+          only:
+            - vsphere-iso.windows-desktop-pro

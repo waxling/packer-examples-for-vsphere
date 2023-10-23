@@ -1,0 +1,29 @@
+{
+  "name": "Packer Examples for vSphere",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/powershell:1": {},
+    "ghcr.io/devcontainers-contrib/features/ansible:2": {},
+    "ghcr.io/devcontainers-contrib/features/packer-asdf:2": {},
+    "ghcr.io/devcontainers-contrib/features/terraform-asdf:2": {},
+    "ghcr.io/gickis/devcontainer-features/gomplate:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "GitHub.remotehub",
+        "GitHub.vscode-pull-request-github",
+        "GitLab.gitlab-workflow",
+        "hashicorp.hcl",
+        "hashicorp.terraform",
+        "ms-vscode.powershell",
+        "redhat.ansible",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+}
